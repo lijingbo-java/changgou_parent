@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration//此配置文件只是进行创建和绑定交换机
 public class RabbitMQConfig {
+    //修改
     //队列
     public static String ADD_ES_QUEUE = "add_es_queue";//修改ES库
     public static String ES_PAGE_EXCHANGE = "es_page_exchange";//交换机
