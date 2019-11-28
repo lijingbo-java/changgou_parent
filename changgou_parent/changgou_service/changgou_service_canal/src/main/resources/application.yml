@@ -1,0 +1,43 @@
+server:
+  port: 9009
+spring:
+  application:
+    name: canal
+  redis:
+    host: 192.168.200.128
+  rabbitmq:
+    host: 192.168.200.128
+    port: 5672
+    virtual-host: /li
+    username: lijingbo
+    password: lijingbo
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:6868/eureka
+  instance:
+    prefer-ip-address: true
+feign:
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+       connectTimeout: 6000
+       readTimeout: 8000
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 8000
+canal:
+  client:
+    instances:
+      example:
+        host: 192.168.200.128
+        port: 11111

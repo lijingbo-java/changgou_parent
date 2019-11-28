@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+      - id: goods
+        uri: lb://goods  #对应商品微服务的应用名,不可以随便改,必须一致  lb=LoadBalance  Ribbin(负载均衡)的底层
+        predicates:
+        - Path=/goods/**  #网关路径,所以在访问的时候必须加上网关路径
+        filters:
+        - StripPrefix= 1   #删除前缀,跟上面的路径predicates有关
+        - name: RequestRateLimiter #请求数限流 名字不能随便写,名字必须是这个名字
+          args:
+            key-resolver: "#{@ipKeyResolver}"
+            redis-rate-limiter.replenishRate: 1 #在1秒只能只能访问一次,至于是ip还是用户
+            redis-rate-limiter.burstCapacity: 1 #突发情下可以访问2次
+      - id: system
+        uri: lb://system
+        predicates:
+        - Path=/system/**  #路由到管理员
+        filters:
+        - StripPrefix= 1  #删除前缀,跟上面的路径predicates有关
+      globalcors:  #全局跨域
+        cors-configurations:
+          '[/**]':
+              allowedOrigins: "*"
+              allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+  redis:
+    host: 192.168.200.128
+    port: 6379
+server:
+  port: 9101
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:6868/eureka
+  instance:
+    prefer-ip-address: true
